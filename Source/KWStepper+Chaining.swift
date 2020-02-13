@@ -138,6 +138,38 @@ public extension KWStepper {
 
         return self
     }
+    
+    /// Sets the stepper's `didReachMaxValueCallback`.
+    @discardableResult
+    func didReachMaxValue(_ callback: KWStepperCallback?) -> Self {
+        didReachMaxValueCallback = callback
+        
+        return self
+    }
+    
+    /// Sets the stepper's `didReachMinValueCallback`.
+    @discardableResult
+    func didReachMinValue(_ callback: KWStepperCallback?) -> Self {
+        didReachMinValueCallback = callback
+        
+        return self
+    }
+    
+    /// Sets the stepper's `didLeaveMaxValueCallback`.
+    @discardableResult
+    func didLeaveMaxValue(_ callback: KWStepperCallback?) -> Self {
+        didLeaveMaxValueCallback = callback
+        
+        return self
+    }
+    
+    /// Sets the stepper's `didLeaveMinValueCallback`.
+    @discardableResult
+    func didLeaveMinValue(_ callback: KWStepperCallback?) -> Self {
+        didLeaveMinValueCallback = callback
+        
+        return self
+    }
 
     // MARK: - Convenience Methods
 
