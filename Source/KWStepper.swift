@@ -23,6 +23,18 @@ import UIKit
 
     /// Called when a long press gesture ends.
     @objc optional func KWStepperDidEndLongPress()
+    
+    /// Called when `value` reaches `maximumValue`
+    @objc optional func KWStepperDidReachMaxValue()
+    
+    /// Called when `value` reaches `minimumValue`
+    @objc optional func KWStepperDidReachMinValue()
+    
+    /// Called when `value` leaves `maximumValue`
+    @objc optional func KWStepperDidLeaveMaxValue()
+    
+    /// Called when `value` leaves `minimumValue`
+    @objc optional func KWStepperDidLeaveMinValue()
 }
 
 /// A stepper control with flexible UI and tailored UX.
@@ -135,6 +147,18 @@ open class KWStepper: UIControl {
 
     /// Executed when a long press gesture ends.
     public var longPressEndedCallback: KWStepperCallback?
+    
+    /// Executed when `value` reaches `maximumValue`
+    public var didReachMaxValueCallback: KWStepperCallback?
+    
+    /// Executed when `value` reaches `minimumValue`
+    public var didReachMinValueCallback: KWStepperCallback?
+    
+    /// Executed when `value` leaves `maximumValue`
+    public var didLeaveMaxValueCallback: KWStepperCallback?
+    
+    /// Executed when `value` leaves `minimumValue`
+    public var didLeaveMinValueCallback: KWStepperCallback?
 
     // MARK: - Private Variables
 
@@ -181,10 +205,20 @@ open class KWStepper: UIControl {
     @objc @discardableResult
     public func decrementValue() -> Self {
         let decrementedValue = (value - decrementStepValue).round(with: roundingBehavior)
+        
+        if value == maximumValue {
+            delegate?.KWStepperDidLeaveMaxValue?()
+            didLeaveMaxValueCallback?(self)
+        }
 
         // The `value` should wrap to `maximumValue`.
         if wraps && decrementedValue < minimumValue {
             value = maximumValue
+            
+            delegate?.KWStepperDidReachMaxValue?()
+            didReachMaxValueCallback?(self)
+            delegate?.KWStepperDidLeaveMinValue?()
+            didLeaveMinValueCallback?(self)
         // The `value` should be decremented.
         } else if decrementedValue >= minimumValue {
             value = decrementedValue
@@ -196,6 +230,11 @@ open class KWStepper: UIControl {
             delegate?.KWStepperMinValueClamped?()
             minValueClampedCallback?(self)
         }
+        
+        if(decrementedValue == minimumValue) {
+            delegate?.KWStepperDidReachMinValue?()
+            didReachMinValueCallback?(self)
+        }
 
         return self
     }
@@ -204,10 +243,20 @@ open class KWStepper: UIControl {
     @objc @discardableResult
     public func incrementValue() -> Self {
         let incrementedValue = (value + incrementStepValue).round(with: roundingBehavior)
+        
+        if value == minimumValue {
+            delegate?.KWStepperDidLeaveMinValue?()
+            didLeaveMinValueCallback?(self)
+        }
 
         // The `value` should wrap to `minimumValue`.
         if wraps && incrementedValue > maximumValue {
             value = minimumValue
+            
+            delegate?.KWStepperDidReachMinValue?()
+            didReachMinValueCallback?(self)
+            delegate?.KWStepperDidLeaveMaxValue?()
+            didLeaveMaxValueCallback?(self)
         // The `value` should be incremented.
         } else if incrementedValue <= maximumValue {
             value = incrementedValue
@@ -218,6 +267,11 @@ open class KWStepper: UIControl {
             endLongPress()
             delegate?.KWStepperMaxValueClamped?()
             maxValueClampedCallback?(self)
+        }
+        
+        if(incrementedValue == maximumValue) {
+            delegate?.KWStepperDidReachMaxValue?()
+            didReachMaxValueCallback?(self)
         }
 
         return self
