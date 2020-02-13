@@ -33,6 +33,13 @@ use_frameworks!
 pod 'KWStepper'
 ```
 
+To install this version of the KWStepper add the following lines to you `Podfile`:
+
+```ruby
+use_frameworks!
+pod 'KWStepper', :git => 'https://github.com/MBFalafel/KWStepper.git'
+```
+
 ### Carthage
 
 To integrate KWStepper using [Carthage](https://github.com/Carthage/Carthage), add the following line to you `Cartfile`:
@@ -117,6 +124,10 @@ Adopting `KWStepperDelegate` provides the following optional delegate methods fo
 * `optional func KWStepperMaxValueClamped()`
 * `optional func KWStepperMinValueClamped()`
 * `optional func KWStepperDidEndLongPress()`
+* `optional func KWStepperDidReachMaxValue()`
+* `optional func KWStepperDidReachMinValue()`
+* `optional func KWStepperDidLeaveMaxValue()`
+* `optional func KWStepperDidLeaveMinValue()`
 
 ### Callbacks
 
@@ -128,6 +139,10 @@ KWStepper provides the following callbacks:
 * `maxValueClampedCallback`
 * `minValueClampedCallback`
 * `longPressEndedCallback`
+* `didReachMaxValueCallback`
+* `didReachMinValueCallback`
+* `didLeaveMaxValueCallback`
+* `didLeaveMinValueCallback`
 
 Method chaining is supported for callbacks too:
 
@@ -139,6 +154,10 @@ stepper
     .maxValueClamped { _ in }
     .minValueClamped { _ in }
     .longPressEnded { _ in }
+    .didReachMaxValue { _ in }
+    .didReachMinValue { _ in }
+    .didLeaveMaxValue { _ in }
+    .didLeaveMinValue { _ in }
 
 // `maxValueClampedCallback` and `minValueClampedCallback` may be set simultaneously.
 stepper.valueClamped { stepper in
