@@ -147,6 +147,18 @@ open class KWStepper: UIControl {
 
     /// Executed when a long press gesture ends.
     public var longPressEndedCallback: KWStepperCallback?
+    
+    /// Executed when `value` reaches `maximumValue`
+    public var didReachMaxValueCallback: KWStepperCallback?
+    
+    /// Executed when `value` reaches `minimumValue`
+    public var didReachMinValueCallback: KWStepperCallback?
+    
+    /// Executed when `value` leaves `maximumValue`
+    public var didLeaveMaxValueCallback: KWStepperCallback?
+    
+    /// Executed when `value` leaves `minimumValue`
+    public var didLeaveMinValueCallback: KWStepperCallback?
 
     // MARK: - Private Variables
 
@@ -196,6 +208,7 @@ open class KWStepper: UIControl {
         
         if value == maximumValue {
             delegate?.KWStepperDidLeaveMaxValue?()
+            didLeaveMaxValueCallback?(self)
         }
 
         // The `value` should wrap to `maximumValue`.
@@ -203,7 +216,9 @@ open class KWStepper: UIControl {
             value = maximumValue
             
             delegate?.KWStepperDidReachMaxValue?()
+            didReachMaxValueCallback?(self)
             delegate?.KWStepperDidLeaveMinValue?()
+            didLeaveMinValueCallback?(self)
         // The `value` should be decremented.
         } else if decrementedValue >= minimumValue {
             value = decrementedValue
@@ -218,6 +233,7 @@ open class KWStepper: UIControl {
         
         if(decrementedValue == minimumValue) {
             delegate?.KWStepperDidReachMinValue?()
+            didReachMinValueCallback?(self)
         }
 
         return self
@@ -230,6 +246,7 @@ open class KWStepper: UIControl {
         
         if value == minimumValue {
             delegate?.KWStepperDidLeaveMinValue?()
+            didLeaveMinValueCallback?(self)
         }
 
         // The `value` should wrap to `minimumValue`.
@@ -237,7 +254,9 @@ open class KWStepper: UIControl {
             value = minimumValue
             
             delegate?.KWStepperDidReachMinValue?()
+            didReachMinValueCallback?(self)
             delegate?.KWStepperDidLeaveMaxValue?()
+            didLeaveMaxValueCallback?(self)
         // The `value` should be incremented.
         } else if incrementedValue <= maximumValue {
             value = incrementedValue
@@ -252,6 +271,7 @@ open class KWStepper: UIControl {
         
         if(incrementedValue == maximumValue) {
             delegate?.KWStepperDidReachMaxValue?()
+            didReachMaxValueCallback?(self)
         }
 
         return self
